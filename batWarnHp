@@ -1,0 +1,17 @@
+#!/bin/bash
+while true; do
+    disconnected=$(acpi -a | grep -q 'off')
+    bat=$(acpi -b | grep -Eo '[0-9]{1,3}%' | grep -Eo '[0-9]{1,3}')
+    if acpi -a | grep -q 'off'; then
+        echo $bat
+        if ((bat<55)); then
+            echo "bat low!"
+            timeout -s 9 0.5 speaker-test --frequency 432 --test sine
+            if ((bat<50)); then
+                zenity --notification --text "bat very low"
+            fi
+        fi
+    fi
+    sleep 30
+done
+
